@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Preceptora · Ingreso</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="auth-page">
+    <img class="auth-logo" src="img/logo_escuela.png" alt="Logo escuela">
+    <h1 class="auth-title">Sistema Preceptora</h1>
+    <p class="auth-subtitle">Gestión de alumnos</p>
+
+    <div class="auth-card">
+      <div class="form-group">
+        <label>Correo</label>
+        <input type="email" id="email" placeholder="correo@escuela.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="pass" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="btn-primary" id="btn-login">INGRESAR</button>
+      <p class="error-msg" id="error-msg"></p>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase.js"></script>
+  <script>
+    // Si ya está logueado, redirigir
+    auth.onAuthStateChanged(u => { if (u) window.location.href = 'alumnos.html'; });
+
+    document.getElementById('btn-login').addEventListener('click', async () => {
+      const email = document.getElementById('email').value.trim();
+      const pass  = document.getElementById('pass').value;
+      const errEl = document.getElementById('error-msg');
+      errEl.textContent = '';
+
+      if (!email || !pass) { errEl.textContent = 'Completá todos los campos'; return; }
+
+      try {
+        await auth.signInWithEmailAndPassword(email, pass);
+        window.location.href = 'alumnos.html';
+      } catch (e) {
+        errEl.textContent = 'Correo o contraseña incorrectos';
+      }
+    });
+
+    // Enter para login
+    document.getElementById('pass').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('btn-login').click();
+    });
+  </script>
+</body>
+</html>
